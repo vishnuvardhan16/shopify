@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.Optional;
+
 @Component
 @Slf4j
 public class UsersService {
@@ -18,7 +21,7 @@ public class UsersService {
     @Autowired
     MongoRepository mongoRepository;
 
-    public UserEntity createUser(UserDto userDto) {
+    public UserEntity createOrUpdateUser(UserDto userDto) {
 
         if (userDto != null) {
             UserEntity userEntity = userDtoToEntity(userDto);
@@ -28,14 +31,29 @@ public class UsersService {
         return null;
     }
 
+    public List<UserEntity> getAllusers() throws Exception {
+
+        try {
+            return userRepository.findAll();
+        } catch (Exception exception) {
+            log.error(exception.getMessage());
+            throw exception;
+        }
+    }
+
+    public Optional<UserEntity> getUserByEmail(String email) {
+        return userRepository.findById(email);
+    }
+
     private UserEntity userDtoToEntity(UserDto userDto) {
         UserEntity userEntity = new UserEntity();
         userEntity.setId(userDto.getId());
         userEntity.setEmail(userDto.getEmail());
         userEntity.setDob(userDto.getDob());
         userEntity.setFirstName(userDto.getFirstName());
-        userEntity.setLastName(userEntity.getLastName());
-        userEntity.setAddress(userEntity.getAddress());
+        userEntity.setLastName(userDto.getLastName());
+        userEntity.setAddress(userDto.getAddress());
+        userEntity.setActive(userDto.isActive());
         return userEntity;
     }
 
