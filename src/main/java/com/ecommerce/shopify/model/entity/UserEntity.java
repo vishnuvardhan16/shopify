@@ -4,13 +4,13 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collation = "users")
+@Document(collection = "usersEntity")
 @Data
 public class UserEntity {
 
-    @Id
     private String id;
 
+    @Id
     private String email;
 
     private String firstName;
